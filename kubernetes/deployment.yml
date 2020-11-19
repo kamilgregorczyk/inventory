@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory
+  labels:
+    app: inventory
+spec:
+  replicas: 4
+  template:
+    metadata:
+      name: inventory
+      labels:
+        app: inventory
+    spec:
+      containers:
+        - name: inventory
+          image: uniqe15/inventory:v3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: POSTGRES_URL
+              value: jdbc:postgresql://postgres-postgresql:5432/inventory_db
+            - name: POSTGRES_USER
+              value: inventory_user
+            - name: POSTGRES_PASSWORD
+              value: online13
+          resources:
+            requests:
+              cpu: "0.5"
+              memory: 500Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: inventory
